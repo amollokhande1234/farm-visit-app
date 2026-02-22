@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "815417174447",
+    "project_id": "farmer-visit-app",
+    "storage_bucket": "farmer-visit-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:815417174447:android:627dc29c2c1b8a5f4c675a",
+        "android_client_info": {
+          "package_name": "com.example.feild_visit_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUpwQzOg9a__LfgMU8zHR5Iagv07SYuqY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
