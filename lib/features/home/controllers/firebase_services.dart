@@ -16,13 +16,11 @@ class FirebaseService {
     try {
       final id = const Uuid().v4();
 
-      /// 1️⃣ Upload image to Cloudinary
       final imageUrl = await CloudinaryService().uploadImage(image);
 
       visitModel.imagePath = imageUrl;
       visitModel.isSynced = true;
 
-      /// 3️⃣ Store in Firestore
       await _firestore
           .collection(collectionName)
           .doc(id)

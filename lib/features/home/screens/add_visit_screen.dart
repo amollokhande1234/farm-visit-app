@@ -206,11 +206,10 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
 
                               Expanded(
                                 child: Container(
+                                  height: 45, // fixed height
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 8,
-                                    vertical: 0,
                                   ),
-                                  height: 45,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8),
                                     color: Colors.white,
@@ -218,32 +217,30 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
                                       color: Colors.grey.shade400,
                                     ),
                                   ),
-                                  child: Flexible(
-                                    child: DropdownButtonHideUnderline(
-                                      child: DropdownButton<String>(
-                                        value: _selectedCrop,
-                                        hint: const Text(
-                                          "Select Crop",
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                        isExpanded: true,
-                                        items: _crops.map((crop) {
-                                          return DropdownMenuItem<String>(
-                                            value: crop,
-                                            child: Text(
-                                              crop,
-                                              style: const TextStyle(
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                          );
-                                        }).toList(),
-                                        onChanged: (String? newValue) {
-                                          setState(() {
-                                            _selectedCrop = newValue;
-                                          });
-                                        },
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton<String>(
+                                      value: _selectedCrop,
+                                      hint: const Text(
+                                        "Select Crop",
+                                        style: TextStyle(fontSize: 14),
                                       ),
+                                      isExpanded: true,
+                                      items: _crops.map((crop) {
+                                        return DropdownMenuItem<String>(
+                                          value: crop,
+                                          child: Text(
+                                            crop,
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        );
+                                      }).toList(),
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          _selectedCrop = newValue;
+                                        });
+                                      },
                                     ),
                                   ),
                                 ),
