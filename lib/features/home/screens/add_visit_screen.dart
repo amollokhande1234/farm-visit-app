@@ -34,6 +34,9 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
 
   String lat = "";
   String long = "";
+  bool hasLocation = false;
+
+  String address = '';
 
   final List<String> _crops = ['Wheat', 'Rice', 'Corn', 'Other'];
 
@@ -121,45 +124,44 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
 
                 const SizedBox(height: 20),
 
-                BlocConsumer<LocationCubit, LocationState>(
-                  listener: (context, state) {
-                    if (state is LocationError) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(state.message)));
-                    }
-                  },
-                  builder: (context, state) {
-                    bool hasLocation = false;
-                    String address = "Location not set";
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.grey.shade400),
+                      ),
+                      height: 80,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                context.read<LocationCubit>().fetchLocation();
+                              },
+                              child: BlocConsumer<LocationCubit, LocationState>(
+                                listener: (context, state) {
+                                  if (state is LocationError) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(state.message)),
+                                    );
+                                  }
+                                },
+                                builder: (context, state) {
+                                  bool hasLocation = false;
+                                  String address = "Location not set";
 
-                    if (state is LocationLoaded) {
-                      hasLocation = true;
-                      address = state.address;
+                                  if (state is LocationLoaded) {
+                                    hasLocation = true;
+                                    address = state.address;
 
-                      lat = state.position.latitude.toString();
-                      long = state.position.longitude.toString();
-                    }
+                                    lat = state.position.latitude.toString();
+                                    long = state.position.longitude.toString();
+                                  }
 
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: Colors.grey.shade400),
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    context
-                                        .read<LocationCubit>()
-                                        .fetchLocation();
-                                  },
-                                  child: Container(
+                                  return Container(
                                     padding: const EdgeInsets.symmetric(
                                       vertical: 12,
                                       horizontal: 8,
@@ -198,101 +200,95 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
                                               ),
                                       ],
                                     ),
-                                  ),
-                                ),
+                                  );
+                                },
                               ),
-
-                              const SizedBox(width: 12),
-
-                              Expanded(
-                                child: Container(
-                                  height: 45, // fixed height
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: Colors.white,
-                                    border: Border.all(
-                                      color: Colors.grey.shade400,
-                                    ),
-                                  ),
-                                  child: DropdownButtonHideUnderline(
-                                    child: DropdownButton<String>(
-                                      value: _selectedCrop,
-                                      hint: const Text(
-                                        "Select Crop",
-                                        style: TextStyle(fontSize: 14),
-                                      ),
-                                      isExpanded: true,
-                                      items: _crops.map((crop) {
-                                        return DropdownMenuItem<String>(
-                                          value: crop,
-                                          child: Text(
-                                            crop,
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                        );
-                                      }).toList(),
-                                      onChanged: (String? newValue) {
-                                        setState(() {
-                                          _selectedCrop = newValue;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        const SizedBox(height: 12),
-
-                        if (hasLocation) ...[
-                          Container(
-                            width: double.maxFinite,
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: Colors.green.shade50,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: Colors.green.shade200),
                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "📍 Address:",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.green.shade800,
+                          ),
+
+                          const SizedBox(width: 12),
+
+                          Expanded(
+                            child: Container(
+                              height: 45,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Colors.white,
+                                border: Border.all(color: Colors.grey.shade400),
+                              ),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                                  value: _selectedCrop,
+                                  hint: const Text(
+                                    "Select Crop",
+                                    style: TextStyle(fontSize: 14),
                                   ),
+                                  isExpanded: true,
+                                  items: _crops.map((crop) {
+                                    return DropdownMenuItem<String>(
+                                      value: crop,
+                                      child: Text(
+                                        crop,
+                                        style: const TextStyle(fontSize: 14),
+                                      ),
+                                    );
+                                  }).toList(),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      _selectedCrop = newValue;
+                                    });
+                                  },
                                 ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  address,
-                                  style: TextStyle(
-                                    color: Colors.green.shade900,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  "Latitude: $lat",
-                                  style: const TextStyle(fontSize: 13),
-                                ),
-                                Text(
-                                  "Longitude: $long",
-                                  style: const TextStyle(fontSize: 13),
-                                ),
-                              ],
+                              ),
                             ),
                           ),
                         ],
-                      ],
-                    );
-                  },
+                      ),
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    if (hasLocation) ...[
+                      Container(
+                        width: double.maxFinite,
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.green.shade50,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.green.shade200),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "📍 Address:",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green.shade800,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              address,
+                              style: TextStyle(color: Colors.green.shade900),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              "Latitude: $lat",
+                              style: const TextStyle(fontSize: 13),
+                            ),
+                            Text(
+                              "Longitude: $long",
+                              style: const TextStyle(fontSize: 13),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
 
                 const SizedBox(height: 10),
